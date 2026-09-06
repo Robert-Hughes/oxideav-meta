@@ -233,6 +233,7 @@ const CATEGORY_TABLE: &[(&str, &str)] = &[
     // Source drivers.
     ("source", "source"),
     ("http", "source"),
+    ("hls", "source"),
     ("generator", "source"),
     ("bluray", "source"),
     ("dvd", "source"),
@@ -279,6 +280,10 @@ const SECTIONS: &[(&str, Option<&str>)] = &[
     (
         "target.'cfg(target_os=\"linux\")'.dependencies",
         Some("target_os = \"linux\""),
+    ),
+    (
+        "target.'cfg(any(target_os=\"linux\",target_os=\"freebsd\"))'.dependencies",
+        Some("any(target_os = \"linux\", target_os = \"freebsd\")"),
     ),
     (
         "target.'cfg(any(target_os=\"linux\",target_os=\"windows\"))'.dependencies",

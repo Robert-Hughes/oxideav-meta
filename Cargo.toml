@@ -139,6 +139,7 @@ oxideav-subtitle = { version = "0.1", optional = true }
 oxideav-audio-filter = { version = "0.1", optional = true }
 oxideav-generator = { version = "0.1", optional = true }
 oxideav-http = { version = "0.0", optional = true }
+oxideav-hls = { path = "../oxideav-hls", version = "0.1", optional = true }
 oxideav-image-filter = { version = "0.1", optional = true }
 oxideav-source = { version = "0.1", optional = true }
 oxideav-bluray = { version = "0.0", optional = true }
@@ -182,15 +183,18 @@ oxideav-render = { version = "0.0", optional = true }
 oxideav-audiotoolbox = { version = "0.0", optional = true }
 oxideav-videotoolbox = { version = "0.0", optional = true }
 
-# Hardware-accelerated codec crates — Linux-only (the crates are
-# `#![cfg(target_os = "linux")]`). VA-API (Intel/AMD-leaning + the
-# nvidia-vaapi-driver shim), VDPAU (NVIDIA + Mesa), and the NVIDIA
-# NVDEC/NVENC bridge. Same target-no-op story: the feature is
-# harmless to enable on non-linux.
+# Linux-only hardware-accelerated codec crates. VA-API is the Intel/AMD-leaning
+# path (plus the nvidia-vaapi-driver shim); oxideav-nvidia is the direct
+# NVDEC/NVENC bridge.
 [target.'cfg(target_os = "linux")'.dependencies]
 oxideav-vaapi = { version = "0.0", optional = true }
-oxideav-vdpau = { version = "0.0", optional = true }
 oxideav-nvidia = { version = "0.0", optional = true }
+
+# VDPAU is available on both Linux and FreeBSD. The bridge runtime-loads
+# libvdpau + X11, so enabling the feature does not add a link-time system
+# dependency; unsupported hosts simply skip registration at runtime.
+[target.'cfg(any(target_os = "linux", target_os = "freebsd"))'.dependencies]
+oxideav-vdpau = { version = "0.0", optional = true }
 
 # Vulkan Video — vendor- and OS-neutral. Builds on Linux + Windows
 # (the crate body is gated to `cfg(any(target_os = "linux",
@@ -273,7 +277,7 @@ hwaccel = [
 # adds `http(s)://`; `generator` adds `generate://` synth URIs;
 # `bluray` adds `bluray://` (UDF mount + BDMV walk + .m2ts stream);
 # `dvd` adds `dvd://` (ISO 9660 + UDF 1.02 mount + VIDEO_TS walk).
-source-drivers = ["source", "http", "generator", "bluray", "dvd"]
+source-drivers = ["source", "http", "hls", "generator", "bluray", "dvd"]
 
 # ---------------------------------------------------------------------
 # Per-crate features — enable a single sibling without dragging a
@@ -389,6 +393,7 @@ mpegts = ["dep:oxideav-mpegts"]
 dvd = ["dep:oxideav-dvd"]
 generator = ["dep:oxideav-generator"]
 http = ["dep:oxideav-http"]
+hls = ["dep:oxideav-hls"]
 image-filter = ["dep:oxideav-image-filter"]
 source = ["dep:oxideav-source"]
 
