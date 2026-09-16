@@ -139,7 +139,7 @@ oxideav-subtitle = { version = "0.1", optional = true }
 oxideav-audio-filter = { version = "0.1", optional = true }
 oxideav-generator = { version = "0.1", optional = true }
 oxideav-http = { version = "0.0", optional = true }
-oxideav-hls = { path = "../oxideav-hls", version = "0.1", optional = true }
+oxideav-hls = { version = "0.1", optional = true }
 oxideav-image-filter = { version = "0.1", optional = true }
 oxideav-source = { version = "0.1", optional = true }
 oxideav-bluray = { version = "0.0", optional = true }
@@ -428,3 +428,8 @@ fbx = ["dep:oxideav-fbx", "mesh3d"]
 # 3D renderer (Scene3D → packed RGBA8). Pulls `mesh3d` because the
 # render trait takes `&Scene3D` as input.
 render = ["dep:oxideav-render", "mesh3d"]
+
+[patch.crates-io]
+oxideav-core = { git = "https://github.com/Robert-Hughes/oxideav-core.git", branch = "dev" }
+oxideav-http = { git = "https://github.com/Robert-Hughes/oxideav-http.git", branch = "dev" }
+oxideav-hls = { git = "https://github.com/Robert-Hughes/oxideav-hls.git", branch = "dev" }
